@@ -216,7 +216,7 @@ usersRoute.options(function(req, res){
 var userRoute = router.route('/users/:id');
 userRoute.get(function(req, res) {
 	var currid=req.params.id;
-	User.find(currid, function(err, user){
+	User.findById(currid, function(err, user){
 		if(err){
 			res.status(500);
 			res.json({message: 'Error with user find', data: [] });
@@ -289,7 +289,7 @@ var taskRoute = router.route('/tasks/:id');
 
 taskRoute.get(function(req, res) {
 	var currid=req.params.id;
-	Task.find(currid, function(err, task){
+	Task.findById(currid, function(err, task){
 		if(err){
 			res.status(500);
 			res.json({message: 'Error with task find', data: [] });

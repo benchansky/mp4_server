@@ -26,20 +26,31 @@ var port = process.env.PORT || 4000;
 var allowCrossDomain = function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept");
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header("Access-Control-Allow-Credentials");
   next();
 };
 app.use(allowCrossDomain);
 
 // Use the body-parser package in our application
+
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+
+
+app.use(bodyParser.json());
+
 
 // All our routes will start with /api
 app.use('/api', router);
 
 //Default route here
 var homeRoute = router.route('/');
+var userRoute = router.route('/users/:id');
+var tasksRoute = router.route('/tasks');
+var usersRoute = router.route('/users');
+var taskRoute = router.route('/tasks/:id');
 
 homeRoute.get(function(req, res) {
   res.json({ message: 'Hello World!' });
@@ -55,7 +66,6 @@ llamaRoute.get(function(req, res) {
 
 
 //tasks route
-var tasksRoute = router.route('/tasks');
 
 tasksRoute.get(function(req, res) {
 	/*
@@ -125,7 +135,7 @@ tasksRoute.post(function(req, res) {
   			res.status(201);
   			res.json({message: 'Succesful Task Creation', data: newTask});
   		}
-  	})
+  	});
 });
 
 tasksRoute.options(function(req, res) {
@@ -134,7 +144,6 @@ tasksRoute.options(function(req, res) {
 });
 
 //users route
-var usersRoute = router.route('/users');
 
 usersRoute.get(function(req, res) {
 	var query = User.find(); 
@@ -187,6 +196,8 @@ count	if set to true, return the count of documents that match the query (instea
 });
 
 usersRoute.post(function(req, res) {
+	//console.log(req.body.name);
+	//console.log("hi ben!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 	var newUser= new User();
 	newUser.name=req.body.name;
   	newUser.email=req.body.email;
@@ -204,7 +215,7 @@ usersRoute.post(function(req, res) {
   			res.status(201);
   			res.json({message: 'Succesful User Creation', data: newUser});
   		}
-  	})
+  	});
 });
 
 usersRoute.options(function(req, res){
@@ -213,7 +224,6 @@ usersRoute.options(function(req, res){
 });
 
 //individual user route
-var userRoute = router.route('/users/:id');
 userRoute.get(function(req, res) {
 	var currid=req.params.id;
 	User.findById(currid, function(err, user){
@@ -285,7 +295,6 @@ userRoute.delete(function(req, res) {
 });
 
 //individual task route
-var taskRoute = router.route('/tasks/:id');
 
 taskRoute.get(function(req, res) {
 	var currid=req.params.id;
@@ -330,7 +339,7 @@ taskRoute.put(function(req, res) {
 			}
 			else{
 				res.status(200);
-				res.json({message:"Task Updated", data:newTask});
+				res.json({message:"Task Updated", data:searchTask});
 			}
 		});
 

@@ -28,18 +28,20 @@ var allowCrossDomain = function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept");
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
   res.header("Access-Control-Allow-Credentials");
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
   next();
 };
 app.use(allowCrossDomain);
 
 // Use the body-parser package in our application
+app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({
   extended: true
 }));
 
 
-app.use(bodyParser.json());
 
 
 // All our routes will start with /api
@@ -139,7 +141,7 @@ tasksRoute.post(function(req, res) {
 });
 
 tasksRoute.options(function(req, res) {
-	res.writehead(200);
+	res.writeHead(200);
 	res.end();
 });
 
@@ -219,7 +221,7 @@ usersRoute.post(function(req, res) {
 });
 
 usersRoute.options(function(req, res){
-	res.writehead(200);
+	res.writeHead(200);
 	res.end();
 });
 
